@@ -218,7 +218,7 @@ const Home: React.FC = () => {
                   <div className="w-12 h-[1px] bg-primary-container" />
                   <span className="text-primary-container font-bold uppercase tracking-[0.6em] text-[10px]">{heroLabel}</span>
                 </div>
-                <h1 className="font-display text-3xl sm:text-5xl lg:text-7xl text-black font-black uppercase leading-[0.95] tracking-tighter drop-shadow-sm">
+                <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-black font-black uppercase leading-[0.95] tracking-tighter drop-shadow-sm">
                   {formatTitle(titleText)}
                 </h1>
               </motion.div>
@@ -354,7 +354,7 @@ const Home: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {[
                 { title: "Artists", label: "Talent Management", img: bentoArt.image },
                 { title: "Events", label: "Global Production", img: bentoEve.image },
@@ -363,7 +363,7 @@ const Home: React.FC = () => {
                 <Link
                   key={i}
                   to={`/${card.title.toLowerCase()}`}
-                  className="group relative h-[400px] sm:h-[550px] lg:h-[650px] overflow-hidden bg-zinc-900 rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/5 shadow-2xl transition-all duration-700 hover:border-primary-container/30"
+                  className="group relative h-[400px] sm:h-[500px] md:h-[550px] lg:h-[650px] overflow-hidden bg-zinc-900 rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/5 shadow-2xl transition-all duration-700 hover:border-primary-container/30"
                 >
                   <img
                     src={card.img}
@@ -372,7 +372,7 @@ const Home: React.FC = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90"></div>
 
-                  <div className="absolute inset-x-0 bottom-0 p-8 sm:p-14 space-y-4 sm:space-y-6">
+                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-14 space-y-4 sm:space-y-6">
                     <span className="text-primary-container font-bold uppercase tracking-[0.4em] text-[10px] block translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
                       {card.label}
                     </span>
@@ -415,9 +415,9 @@ const Home: React.FC = () => {
               </div>
 
               {/* Right: Clean 2x2 stats grid */}
-              <div className="w-full md:w-1/2 grid grid-cols-2 gap-6">
+              <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {homeStats.map((stat, i) => (
-                  <div key={i} className="bg-white border border-black/8 rounded-3xl p-8 flex flex-col items-start gap-4 shadow-sm hover:shadow-md hover:border-primary-container/20 transition-all duration-500">
+                  <div key={i} className="bg-white border border-black/8 rounded-3xl p-6 sm:p-8 flex flex-col items-start gap-4 shadow-sm hover:shadow-md hover:border-primary-container/20 transition-all duration-500">
                     <div className="w-12 h-12 rounded-2xl bg-black/4 flex items-center justify-center">
                       <span className="material-symbols-outlined text-primary-container text-xl">{stat.icon}</span>
                     </div>

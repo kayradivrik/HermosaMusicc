@@ -34,8 +34,6 @@ const Footer: React.FC = () => {
   const igUrl = settings?.instagramUrl || "https://www.instagram.com/hermosamusicen/";
   const tiktokUrl = settings?.tiktokUrl || "https://www.tiktok.com/@hermosamusicen";
   const youtubeUrl = settings?.youtubeUrl || "https://www.youtube.com/@hermosamusictv";
-  const facebookUrl = settings?.facebookUrl || "#";
-  const twitterUrl = settings?.twitterUrl || "#";
   const footerDesc = settings?.footerDescription || "A high-energy entertainment platform rising from the dark. A cyber-futuristic approach to music and event management.";
   const footerLinks = settings?.footerLinks || [
     { label: "Privacy Policy", url: "#" },

@@ -52,7 +52,7 @@ const TopNavBar: React.FC = () => {
   const igUrl = settings?.instagramUrl || "https://www.instagram.com/hermosamusicen/";
   const tiktokUrl = settings?.tiktokUrl || "https://www.tiktok.com/@hermosamusicen";
   const youtubeUrl = settings?.youtubeUrl || "https://www.youtube.com/@hermosamusictv";
-  const facebookUrl = settings?.facebookUrl;
+
 
   const menuVariants = {
     closed: { opacity: 0, y: '-100%' },
