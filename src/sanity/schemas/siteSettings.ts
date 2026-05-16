@@ -23,6 +23,24 @@ export default {
       options: { hotspot: true },
     },
     {
+      name: 'heroImages',
+      title: 'Hero Slider Images',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+    },
+    {
+      name: 'sliderLabel',
+      title: 'Hero Slider Label',
+      type: 'string',
+      description: 'Default: Global Elite',
+    },
+    {
+      name: 'sliderYear',
+      title: 'Hero Slider Year',
+      type: 'string',
+      description: 'Default: 2024',
+    },
+    {
       name: 'platformTitle',
       title: 'Platform Dynamics Title',
       type: 'string',
@@ -38,7 +56,7 @@ export default {
       type: 'object',
       fields: [
         { name: 'title', type: 'string' },
-        { name: 'subtitle', type: 'string' },
+        { name: 'label', title: 'Card Label', type: 'string' },
         { name: 'image', type: 'image', options: { hotspot: true } },
         { name: 'link', title: 'Target Link (e.g. /artists)', type: 'string' },
       ]
@@ -49,7 +67,7 @@ export default {
       type: 'object',
       fields: [
         { name: 'title', type: 'string' },
-        { name: 'subtitle', type: 'string' },
+        { name: 'label', title: 'Card Label', type: 'string' },
         { name: 'image', type: 'image', options: { hotspot: true } },
         { name: 'link', title: 'Target Link (e.g. /events)', type: 'string' },
       ]
@@ -60,7 +78,8 @@ export default {
       type: 'object',
       fields: [
         { name: 'title', type: 'string' },
-        { name: 'subtitle', type: 'string' },
+        { name: 'label', title: 'Card Label', type: 'string' },
+        { name: 'image', type: 'image', options: { hotspot: true } },
         { name: 'description', type: 'text' },
         { name: 'link', title: 'Target Link (e.g. /services)', type: 'string' },
       ]

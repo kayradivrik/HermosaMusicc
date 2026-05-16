@@ -20,6 +20,7 @@ interface SiteSettings {
   heroLabel?: string; // e.g. "Global Agency"
   industryLabel?: string; // e.g. "Industry Leaders"
   estLabel?: string; // e.g. "Est. 2024"
+  heroImage?: any;
   heroImages?: any[]; 
   platformTitle?: string;
   platformSubtitle?: string;
@@ -108,6 +109,11 @@ const Home: React.FC = () => {
   const heroLabel = settings?.heroLabel || "Global Agency";
   const industryLabel = settings?.industryLabel || "Industry Leaders";
   const estLabel = settings?.estLabel || "Est. 2024";
+
+  // Hero Background Image Fallback
+  const heroBackgroundImage = settings?.heroImage 
+    ? urlFor(settings.heroImage).url() 
+    : "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop";
 
   // Slider Images & Labels Fallback
   const heroSliderImages = settings?.heroImages?.length 
@@ -199,7 +205,7 @@ const Home: React.FC = () => {
           >
             <div
               className="w-full h-full bg-cover bg-center opacity-40"
-              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2070&auto=format&fit=crop')` }}
+              style={{ backgroundImage: `url('${heroBackgroundImage}')` }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent" />
           </motion.div>
@@ -248,11 +254,7 @@ const Home: React.FC = () => {
                   </div>
                 </button>
                 
-                <div className="hidden sm:flex items-center gap-4 text-black/40">
-                  <span className="text-[10px] font-bold uppercase tracking-widest">{industryLabel}</span>
-                  <div className="w-1 h-1 rounded-full bg-primary-container" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">{estLabel}</span>
-                </div></motion.div>
+                </motion.div>
             </div>
 
             {/* Right Column: Hero Image Frame with Slider */}

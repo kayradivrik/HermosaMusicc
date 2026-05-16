@@ -250,18 +250,6 @@ const Videos: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Sidebar Banner */}
-                <div className="pt-10 border-t border-black/5">
-                  <div className="bg-primary-container/5 rounded-[2rem] p-8 space-y-6">
-                    <p className="text-black/60 text-xs font-light leading-relaxed uppercase tracking-wider">
-                      Collaborate with our elite talent for your next visual masterpiece.
-                    </p>
-                    <button className="text-primary-container font-black text-[9px] uppercase tracking-[0.3em] flex items-center gap-3 group">
-                      Book Now 
-                      <span className="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform">east</span>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
