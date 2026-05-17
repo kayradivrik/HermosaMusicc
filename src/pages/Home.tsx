@@ -6,9 +6,8 @@ import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import NeonSeparator from '../components/NeonSeparator';
 import { client, urlFor } from '../lib/sanity';
-import { AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
@@ -73,7 +72,6 @@ const Home: React.FC = () => {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [blogs, setBlogs] = useState<SanityBlog[]>([]);
   const [artists, setArtists] = useState<SanityArtist[]>([]);
-  const [blogIndex, setBlogIndex] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
   const [artistSwiper, setArtistSwiper] = useState<SwiperType | null>(null);
 
@@ -122,8 +120,6 @@ const Home: React.FC = () => {
   const titleText = settings?.heroTitle || "Push The Limits of Sound: Redefine Entertainment with Hermosa";
   const subtitleText = settings?.heroSubtitle || "The world's most prestigious events, artists, and production services on a single platform. Listen to the sound rising from the dark.";
   const heroLabel = settings?.heroLabel || "Global Agency";
-  const industryLabel = settings?.industryLabel || "Industry Leaders";
-  const estLabel = settings?.estLabel || "Est. 2024";
 
   // Hero Background Image Fallback
   const heroBackgroundImage = settings?.heroImage 
