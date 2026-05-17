@@ -124,13 +124,13 @@ const TopNavBar: React.FC = () => {
           </div>
           
           <button 
-            className="flex min-[1200px]:hidden flex-col justify-center items-center gap-1.5 w-10 h-10 relative"
+            className="flex min-[1200px]:hidden flex-col justify-center items-center w-10 h-10 relative z-[130]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle Menu"
           >
-            <motion.div animate={{ rotate: isMenuOpen ? 45 : 0, y: isMenuOpen ? 0 : -6 }} className="w-6 sm:w-8 h-[2px] bg-black absolute" />
-            <motion.div animate={{ opacity: isMenuOpen ? 0 : 1 }} className="w-6 sm:w-8 h-[2px] bg-black" />
-            <motion.div animate={{ rotate: isMenuOpen ? -45 : 0, y: isMenuOpen ? 0 : 6 }} className="w-6 sm:w-8 h-[2px] bg-black absolute" />
+            <motion.div animate={{ rotate: isMenuOpen ? 45 : 0, y: isMenuOpen ? 0 : -4 }} className="w-6 h-[2px] bg-black absolute" />
+            <motion.div animate={{ opacity: isMenuOpen ? 0 : 1 }} className="w-6 h-[2px] bg-black" />
+            <motion.div animate={{ rotate: isMenuOpen ? -45 : 0, y: isMenuOpen ? 0 : 4 }} className="w-6 h-[2px] bg-black absolute" />
           </button>
         </div>
       </header>
@@ -141,27 +141,35 @@ const TopNavBar: React.FC = () => {
             initial="closed" animate="open" exit="closed" variants={menuVariants}
             className="fixed inset-0 w-screen h-screen bg-white z-[110] flex flex-col min-[1200px]:hidden"
           >
-            <div className="flex flex-col h-full px-margin-mobile pt-32 pb-12 overflow-y-auto">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.02),transparent)] pointer-events-none" />
+            <div className="flex flex-col h-full px-8 pt-32 pb-12 overflow-y-auto relative z-10">
               <nav className="flex flex-col gap-6 w-full">
-                {navLinks.map((item) => (
-                  <motion.div key={item.label} variants={linkVariants}>
+                {navLinks.map((item, idx) => (
+                  <motion.div 
+                    key={item.label} 
+                    variants={{
+                      closed: { opacity: 0, x: -20 },
+                      open: { opacity: 1, x: 0, transition: { delay: idx * 0.05 } }
+                    }}
+                  >
                     {isExternal(item.path) ? (
-                      <a href={item.path} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3">
-                        <span className="font-display text-3xl sm:text-4xl md:text-5xl uppercase tracking-tighter text-black group-hover:text-primary transition-all duration-300 group-hover:pl-4">{item.label}</span>
+                      <a href={item.path} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between">
+                        <span className="font-display text-4xl sm:text-5xl uppercase tracking-tighter text-black group-hover:text-primary-container transition-all duration-300">{item.label}</span>
+                        <span className="material-symbols-outlined text-black/20 text-xl">open_in_new</span>
                       </a>
                     ) : (
-                      <Link to={item.path} onClick={() => setIsMenuOpen(false)} className="group flex items-center gap-3">
-                        <span className="font-display text-3xl sm:text-4xl md:text-5xl uppercase tracking-tighter text-black group-hover:text-primary transition-all duration-300 group-hover:pl-4">{item.label}</span>
-                        <span className="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 text-2xl">arrow_forward</span>
+                      <Link to={item.path} onClick={() => setIsMenuOpen(false)} className="group flex items-center justify-between">
+                        <span className="font-display text-4xl sm:text-5xl uppercase tracking-tighter text-black group-hover:text-primary-container transition-all duration-300">{item.label}</span>
+                        <span className="material-symbols-outlined text-primary-container opacity-0 group-hover:opacity-100 transition-all duration-300 text-3xl">east</span>
                       </Link>
                     )}
                   </motion.div>
                 ))}
                 
-                <motion.div variants={linkVariants} className="mt-12 pt-12 border-t border-black/10 flex gap-8">
-                  <a href={igUrl} target="_blank" rel="noopener noreferrer" className="text-black/70 hover:text-primary transition-colors"><i className="fa-brands fa-instagram text-3xl"></i></a>
-                  <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="text-black/70 hover:text-primary transition-colors"><i className="fa-brands fa-tiktok text-3xl"></i></a>
-                  <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="text-black/70 hover:text-primary transition-colors"><i className="fa-brands fa-youtube text-3xl"></i></a>
+                <motion.div variants={linkVariants} className="mt-12 pt-12 border-t border-black/5 flex items-center gap-8">
+                  <a href={igUrl} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-black/5 flex items-center justify-center text-black/60 hover:text-primary-container hover:border-primary-container transition-all"><i className="fa-brands fa-instagram text-xl"></i></a>
+                  <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-black/5 flex items-center justify-center text-black/60 hover:text-primary-container hover:border-primary-container transition-all"><i className="fa-brands fa-tiktok text-xl"></i></a>
+                  <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-black/5 flex items-center justify-center text-black/60 hover:text-primary-container hover:border-primary-container transition-all"><i className="fa-brands fa-youtube text-xl"></i></a>
                 </motion.div>
               </nav>
             </div>

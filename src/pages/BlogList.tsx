@@ -169,7 +169,7 @@ const BlogList: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -24 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+                  className="grid grid-cols-1 min-[500px]:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10"
                 >
                   {paginated.map(blog => (
                     <Link

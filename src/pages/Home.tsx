@@ -8,9 +8,12 @@ import NeonSeparator from '../components/NeonSeparator';
 import { client, urlFor } from '../lib/sanity';
 import { AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade } from 'swiper/modules';
+import { Autoplay, EffectFade, Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import type { Swiper as SwiperType } from 'swiper';
 
 
 
@@ -58,24 +61,38 @@ interface SanityBlog {
   category?: string;
 }
 
+interface SanityArtist {
+  _id: string;
+  name: string;
+  slug: { current: string };
+  image: any;
+  genre: string;
+}
+
 const Home: React.FC = () => {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [blogs, setBlogs] = useState<SanityBlog[]>([]);
+  const [artists, setArtists] = useState<SanityArtist[]>([]);
   const [blogIndex, setBlogIndex] = useState(0);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+  const [artistSwiper, setArtistSwiper] = useState<SwiperType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const settingsQuery = '*[_type == "siteSettings"][0]';
         const blogsQuery = '*[_type == "blog"] | order(publishedAt desc)[0...9]';
+        const artistsQuery = '*[_type == "artist"] | order(_createdAt desc)[0...12]';
 
-        const [settingsData, blogsData] = await Promise.all([
+        const [settingsData, blogsData, artistsData] = await Promise.all([
           client.fetch(settingsQuery),
-          client.fetch(blogsQuery)
+          client.fetch(blogsQuery),
+          client.fetch(artistsQuery)
         ]);
 
         setSettings(settingsData);
         setBlogs(blogsData);
+        setArtists(artistsData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -84,13 +101,11 @@ const Home: React.FC = () => {
   }, []);
 
   const nextBlogs = () => {
-    if (blogs.length <= 3) return;
-    setBlogIndex((prev) => (prev + 3 >= blogs.length ? 0 : prev + 3));
+    if (swiperInstance) swiperInstance.slideNext();
   };
 
   const prevBlogs = () => {
-    if (blogs.length <= 3) return;
-    setBlogIndex((prev) => (prev - 3 < 0 ? Math.floor((blogs.length - 1) / 3) * 3 : prev - 3));
+    if (swiperInstance) swiperInstance.slidePrev();
   };
 
 
@@ -204,10 +219,10 @@ const Home: React.FC = () => {
             className="absolute inset-0 z-0"
           >
             <div
-              className="w-full h-full bg-cover bg-center opacity-40"
+              className="w-full h-full bg-cover bg-center opacity-30 lg:opacity-40"
               style={{ backgroundImage: `url('${heroBackgroundImage}')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white via-white/80 to-white lg:bg-gradient-to-r lg:from-white lg:via-white/40 lg:to-transparent" />
           </motion.div>
 
           <div className="relative z-30 w-full max-w-[95rem] mx-auto px-6 sm:px-12 lg:px-20 pt-[140px] pb-20 lg:py-20 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20 min-h-screen lg:h-screen">
@@ -224,7 +239,7 @@ const Home: React.FC = () => {
                   <div className="w-12 h-[1px] bg-primary-container" />
                   <span className="text-primary-container font-bold uppercase tracking-[0.6em] text-[10px]">{heroLabel}</span>
                 </div>
-                <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-black font-black uppercase leading-[0.95] tracking-tighter drop-shadow-sm">
+                <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-black font-black uppercase leading-[0.9] sm:leading-[0.95] tracking-tighter drop-shadow-sm">
                   {formatTitle(titleText)}
                 </h1>
               </motion.div>
@@ -264,7 +279,7 @@ const Home: React.FC = () => {
               transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
               className="w-full lg:w-[40%] relative"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] shadow-[0_40px_80px_rgba(0,0,0,0.08)] bg-white/50 backdrop-blur-sm">
+              <div className="relative aspect-[4/5] sm:aspect-square lg:aspect-[4/5] overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_40px_80px_rgba(0,0,0,0.08)] bg-white/50 backdrop-blur-sm">
                 <Swiper
                   modules={[Autoplay, EffectFade]}
                   effect="fade"
@@ -365,7 +380,7 @@ const Home: React.FC = () => {
                 <Link
                   key={i}
                   to={`/${card.title.toLowerCase()}`}
-                  className="group relative h-[400px] sm:h-[500px] md:h-[550px] lg:h-[650px] overflow-hidden bg-zinc-900 rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/5 shadow-2xl transition-all duration-700 hover:border-primary-container/30"
+                  className="group relative h-[350px] sm:h-[500px] md:h-[550px] lg:h-[650px] overflow-hidden bg-zinc-900 rounded-[2rem] sm:rounded-[3.5rem] border border-white/5 shadow-2xl transition-all duration-700 hover:border-primary-container/30"
                 >
                   <img
                     src={card.img}
@@ -397,9 +412,9 @@ const Home: React.FC = () => {
 
         <section className="py-24 border-t border-black/5 bg-white">
           <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div className="flex flex-col md:flex-row items-start gap-16 md:gap-24">
+            <div className="flex flex-col lg:flex-row items-start gap-12 lg:gap-24">
               {/* Left: Text — fixed width so text doesn't get squashed */}
-              <div className="w-full md:w-1/2 space-y-8 min-w-0">
+              <div className="w-full lg:w-1/2 space-y-8 min-w-0">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-[1px] bg-primary-container" />
                   <span className="text-primary-container font-bold uppercase tracking-[0.8em] text-[10px] block">{statsLabel}</span>
@@ -417,7 +432,7 @@ const Home: React.FC = () => {
               </div>
 
               {/* Right: Clean 2x2 stats grid */}
-              <div className="w-full md:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="w-full lg:w-1/2 grid grid-cols-1 min-[480px]:grid-cols-2 gap-4 sm:gap-6">
                 {homeStats.map((stat, i) => (
                   <div key={i} className="bg-white border border-black/8 rounded-3xl p-6 sm:p-8 flex flex-col items-start gap-4 shadow-sm hover:shadow-md hover:border-primary-container/20 transition-all duration-500">
                     <div className="w-12 h-12 rounded-2xl bg-black/4 flex items-center justify-center">
@@ -465,19 +480,21 @@ const Home: React.FC = () => {
                 </div>
               </div>
 
-              <div className="relative">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={blogIndex}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-10"
-                  >
-                    {blogs.slice(blogIndex, blogIndex + 3).map((blog) => (
+              <div className="relative overflow-visible">
+                <Swiper
+                  modules={[Navigation]}
+                  onSwiper={setSwiperInstance}
+                  spaceBetween={30}
+                  slidesPerView={1.2}
+                  breakpoints={{
+                    500: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 }
+                  }}
+                  className="w-full"
+                >
+                  {blogs.map((blog) => (
+                    <SwiperSlide key={blog._id}>
                       <Link
-                        key={blog._id}
                         to={`/blog/${blog.slug.current}`}
                         className="group flex flex-col space-y-8"
                       >
@@ -512,14 +529,97 @@ const Home: React.FC = () => {
                             {blog.title}
                           </h3>
                           <p className="text-black/40 text-lg leading-relaxed line-clamp-3 font-body">
-                            {/* English placeholder */}
                             Stay updated with the latest trends and elite productions from the Hermosa Music ecosystem.
                           </p>
                         </div>
                       </Link>
-                    ))}
-                  </motion.div>
-                </AnimatePresence>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── Artists Slider Section ── */}
+        {artists.length > 0 && (
+          <section className="py-32 px-margin-mobile md:px-margin-desktop bg-white relative overflow-hidden border-t border-black/5">
+            <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary-container/5 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div className="max-w-7xl mx-auto relative z-10">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-[1px] bg-primary-container" />
+                    <span className="text-primary-container font-bold uppercase tracking-[0.6em] text-[10px]">Hermosa Roster</span>
+                  </div>
+                  <h2 className="font-display text-4xl sm:text-6xl text-black uppercase leading-none tracking-tighter">Our Artists</h2>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => artistSwiper?.slidePrev()}
+                    className="w-14 h-14 border border-black/10 rounded-full flex items-center justify-center text-black hover:bg-black hover:text-white transition-all group"
+                  >
+                    <span className="material-symbols-outlined group-active:-translate-x-1 transition-transform">west</span>
+                  </button>
+                  <button
+                    onClick={() => artistSwiper?.slideNext()}
+                    className="w-14 h-14 border border-black/10 rounded-full flex items-center justify-center text-black hover:bg-black hover:text-white transition-all group"
+                  >
+                    <span className="material-symbols-outlined group-active:translate-x-1 transition-transform">east</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="relative overflow-visible">
+                <Swiper
+                  modules={[Navigation]}
+                  onSwiper={setArtistSwiper}
+                  spaceBetween={30}
+                  slidesPerView={1.2}
+                  breakpoints={{
+                    500: { slidesPerView: 2 },
+                    1024: { slidesPerView: 4 }
+                  }}
+                  className="w-full"
+                >
+                  {artists.map((artist) => (
+                    <SwiperSlide key={artist._id}>
+                      <Link
+                        to={`/artists/${artist.slug.current}`}
+                        className="group flex flex-col space-y-6"
+                      >
+                        <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-black/5 border border-black/5">
+                          {artist.image ? (
+                            <img
+                              src={urlFor(artist.image).url()}
+                              alt={artist.name}
+                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-black/5" />
+                          )}
+                          
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                          
+                          <div className="absolute bottom-8 left-8 right-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                            <span className="text-white text-[10px] font-bold uppercase tracking-widest">{artist.genre}</span>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2 px-2">
+                          <h3 className="font-display text-2xl text-black uppercase leading-tight group-hover:text-primary-container transition-colors">
+                            {artist.name}
+                          </h3>
+                          <div className="flex items-center gap-2">
+                            <span className="w-6 h-[1px] bg-black/10" />
+                            <span className="text-black/30 text-[10px] font-bold uppercase tracking-widest">{artist.genre}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           </section>
